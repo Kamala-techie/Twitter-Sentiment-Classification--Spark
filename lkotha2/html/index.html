@@ -1,0 +1,396 @@
+<html>
+<body>
+<p><strong>TWITTER SENTIMENT ANALYSIS (TEAM : Lakshmi Kamala Kotha -lkotha2@uic.edu , Vakkalanka V S S Dilip Raju--vvakka2@uic.edu) </strong></p>
+<p>1. <strong>Tweet Preprocessing Steps:</strong></p>
+<ul>
+<li>Converted all the characters to lowercase.</li>
+<li>Replaced all the urls (http(s)|ftp|www) to URL using regular expression</li>
+<li>Replaced all the words in the form of @username to ATUSER</li>
+<li>Removed all the newlines, tab spaces.</li>
+<li>Removed all the special characters.</li>
+<li>Replaced three or more occurrences of the same character with one occurrence.</li>
+<li>Stripped extra spaces.</li>
+<li>Removed all the stop words. Used NLTK library corpus to remove them.</li>
+<li>Used Porters Stemmer from NLTK library to do Stemming</li>
+</ul>
+<p>&nbsp;</p>
+<p>2. <strong>Feature Space:</strong></p>
+<ul>
+<li>Used unigram of tweets as feature space and constructed feature vectors from them using pyspark.mllib.feature.HashingTF for the Na&iuml;ve Bayesian Classifier. Size of Feature space is 50000.</li>
+<li>Used bigrams of tweets as feature space and constructed feature vectors from them using pyspark.mllib.feature.HashingTF for the Na&iuml;ve Bayesian Classifier. Size of Feature space is 50000</li>
+<li>Used unigram of tweets as feature space and constructed feature vectors from them using pyspark.mllib.feature.HashingTF&nbsp; and pyspark.mllib.feature.IDF for the Logistic Regression Classifier. Size of Feature space is 50000</li>
+<li>Used bigram of tweets as feature space ad constructed feature vectors from them using&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pyspark.mllib.feature.HashingTF&nbsp; and pyspark.mllib.feature.IDF for the Logistic Regression Classifier. Size of Feature space is 50000</li>
+<li>Used both unigram and bigram of tweets as feature space ad constructed feature vectors from them using pyspark.mllib.feature.HashingTF and pyspark.mllib.feature.IDF for the Logistic Regression Classifier.&nbsp;Size of Feature space is 50000</li>
+</ul>
+<ul>
+<li>Used unigram of tweets as feature space and constructed feature vectors from them using Tf-idf computation for the decision Tree Learning. Size of feature space is 4000.</li>
+</ul>
+<p>We have decided to use unigram as a feature space as we had good accuracy on validation and test data for it than for any other feature space.</p>
+<p>3.</p>
+<p><strong>Good models from each classifier that we picked to compare with each other are highlighted in bold.&nbsp;</strong></p>
+<p><strong>Na&iuml;ve Bayesian Classifier:</strong></p>
+<p>Built model for different values of parameter lambda.</p>
+<p>For lambda = 0, where there is no smoothing, the model tends to overfit the training data.</p>
+<p>For lambda &gt;0, the model works good for any value of lambda without much significant change in their accuracies.</p>
+<p>When Feature space is taken as bigram, the model doesnot fit well with training data.</p>
+<p>Accuracies for Na&iuml;ve Bayesian with different lambda values on unigram feature space are</p>
+<p><strong>Lambda = 1, Training Accuracy =80.56%, Test Accuracy = 81.05%</strong></p>
+<p>Lambda = 5, Training Accuracy =78.6%, Test Accuracy = 79.9%</p>
+<p>Lambda = 10, Training Accuracy = 77.7%, Test Accuracy = 79.6%</p>
+<p>Lambda = 50, Training Accuracy = 75.8%, Test Accuracy = 79.38%</p>
+<p>For Bigram Feature Space:</p>
+<p>Lambda = 1, &nbsp;Training Accuracy=81.9%, Test Accuracy = 57.6%</p>
+<p>Lambda = 3, Training Accuracy=81.1%, Test Accuracy = 58.2%</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Logistic Regression Stochastic Gradient with regularization:</strong></p>
+<table style="height: 156px;" width="541">
+<tbody>
+<tr>
+<td style="text-align: center;">Regularization Parameter</td>
+<td style="text-align: center;">Regularization Type</td>
+<td style="text-align: center;"># of iterations</td>
+<td style="text-align: center;">Training Accuracy</td>
+<td style="text-align: center;">Test Accuracy</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>0.01</strong></td>
+<td style="text-align: center;"><strong>L2</strong></td>
+<td style="text-align: center;"><strong>100</strong></td>
+<td style="text-align: center;"><strong>75.72</strong></td>
+<td style="text-align: center;"><strong>76.88</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">L2</td>
+<td style="text-align: center;">80</td>
+<td style="text-align: center;">75.55</td>
+<td style="text-align: center;">76.88</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">L2</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">75.65</td>
+<td style="text-align: center;">76.88</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">L2</td>
+<td style="text-align: center;">130</td>
+<td style="text-align: center;">75.84</td>
+<td style="text-align: center;">76.63</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">L1</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">66.35</td>
+<td style="text-align: center;">70.75</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.02</td>
+<td style="text-align: center;">L1</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">63.18</td>
+<td style="text-align: center;">65.73</td>
+</tr>
+<tr>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">L1</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">61.13</td>
+<td style="text-align: center;">61.28</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>Training accuracy for Logistic Regression with stochastic gradient with L2 regularization for bigram feature space is &nbsp;around 78% and accuracy on test set is 66%.</p>
+<p>Training accuracy for Logistic Regression with stochastic gradient with L2 regularization for unigram feature space is around 75.7% and accuracy on test set is 76.8%.</p>
+<p>Training accuracy for Logistic Regression with stochastic gradient without regularization for unigram and bigram combined feature space is around 77% and accuracy on test set is 60%.</p>
+<p>If regularization parameter is increased more than 0.05, then it has become very large as the model doesnot fit well.</p>
+<p>Comparing different models, we found unigram feature space fits better for the data as it shows good accuracies on both training and test data.</p>
+<p>L2 regularization fits the data well than L1 regularization.</p>
+<p>we found with regularization parameter as 0.01 the model fits the data well for 80 iterations.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;<strong>Decision Tree Classifier:</strong>Built model by tuning parameters like MaxDepth and Impurity type.</p>
+<p>We used 4000 features for experimenting with this Classifier.&nbsp;</p>
+<table style="height: 150px; margin-left: auto; margin-right: auto;" width="517">
+<tbody>
+<tr>
+<td>Impurity</td>
+<td>Max_Depth</td>
+<td>Max_bins</td>
+<td>Training Accuracy</td>
+<td>Test Accuracy</td>
+</tr>
+<tr>
+<td>gini</td>
+<td>10</td>
+<td>100</td>
+<td>63.83</td>
+<td>65.46</td>
+</tr>
+<tr>
+<td>gini</td>
+<td>25</td>
+<td>100</td>
+<td>69.51</td>
+<td>68.25</td>
+</tr>
+<tr>
+<td><strong>gini</strong></td>
+<td><strong>30</strong></td>
+<td><strong>100</strong></td>
+<td><strong>70.99</strong></td>
+<td><strong>70.19</strong></td>
+</tr>
+<tr>
+<td>entropy</td>
+<td>10</td>
+<td>100</td>
+<td>62.83</td>
+<td>62.67</td>
+</tr>
+<tr>
+<td>entropy</td>
+<td>25</td>
+<td>100</td>
+<td>69.17</td>
+<td>67.41</td>
+</tr>
+<tr>
+<td>entropy</td>
+<td>30</td>
+<td>100</td>
+<td>70.59</td>
+<td>68.80</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;The algorithm chooses the max bins that it requires as 75 for &nbsp;any value of max_bins&gt;75.</p>
+<p>Model fits well as we increase max_Depth and the classifier supports a max depth of 30 which gives better accuracy than all.&nbsp;</p>
+<p>&nbsp;</p>
+<p>4.&nbsp;</p>
+<table style="height: 169px;" width="523">
+<tbody>
+<tr>
+<td style="text-align: center;">Classifier</td>
+<td style="text-align: center;">Training Accuracy</td>
+<td style="text-align: center;">10-fold Cross-Validation Accuracy</td>
+<td style="text-align: center;">Test Accuracy</td>
+</tr>
+<tr>
+<td style="text-align: center;">Naive Bayesian</td>
+<td style="text-align: center;">&nbsp;80.56</td>
+<td style="text-align: center;">&nbsp;74.50</td>
+<td style="text-align: center;">&nbsp;81.05</td>
+</tr>
+<tr>
+<td style="text-align: center;">Logistic Regression</td>
+<td style="text-align: center;">&nbsp;75.72</td>
+<td style="text-align: center;">&nbsp;74.38</td>
+<td style="text-align: center;">&nbsp;76.88</td>
+</tr>
+<tr>
+<td style="text-align: center;">Decision Tree</td>
+<td style="text-align: center;">&nbsp;70.99</td>
+<td style="text-align: center;">&nbsp; 67.22&nbsp;</td>
+<td style="text-align: center;">&nbsp;70.47</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<table style="height: 124px;" width="443">
+<tbody>
+<tr>
+<td style="text-align: center;">Classifier</td>
+<td style="text-align: center;">Precision for Positive Tweets</td>
+<td style="text-align: center;">Recall for Positive Tweets</td>
+<td style="text-align: center;">F-Score for Positive Tweets</td>
+</tr>
+<tr>
+<td style="text-align: center;">&nbsp;Naive Bayesian</td>
+<td style="text-align: center;">&nbsp;0.8097</td>
+<td style="text-align: center;">&nbsp;0.8186</td>
+<td style="text-align: center;">0.8142</td>
+</tr>
+<tr>
+<td style="text-align: center;">Logistic Regression&nbsp;</td>
+<td style="text-align: center;">0.7538&nbsp;</td>
+<td style="text-align: center;">&nbsp;0.8076</td>
+<td style="text-align: center;">0.7798&nbsp;</td>
+</tr>
+<tr>
+<td style="text-align: center;">Decision Tree</td>
+<td style="text-align: center;">0.6648&nbsp;</td>
+<td style="text-align: center;">0.7289&nbsp;</td>
+<td style="text-align: center;">&nbsp;0.7135</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<table style="height: 124px;" width="443">
+<tbody>
+<tr>
+<td style="text-align: center;">Classifier</td>
+<td style="text-align: center;">Precision for Negative Tweets</td>
+<td style="text-align: center;">Recall for Negative Tweets</td>
+<td style="text-align: center;">F-Score for Negative Tweets</td>
+</tr>
+<tr>
+<td style="text-align: center;">&nbsp;Naive Bayesian</td>
+<td style="text-align: center;">0.8114</td>
+<td style="text-align: center;">0.8022</td>
+<td style="text-align: center;">0.8068</td>
+</tr>
+<tr>
+<td style="text-align: center;">Logistic Regression&nbsp;&nbsp;</td>
+<td style="text-align: center;">0.7865</td>
+<td style="text-align: center;">0.7288</td>
+<td style="text-align: center;">&nbsp;0.7565</td>
+</tr>
+<tr>
+<td style="text-align: center;">&nbsp;Decision Tree</td>
+<td style="text-align: center;">0.7457&nbsp;</td>
+<td style="text-align: center;">&nbsp;0.6839</td>
+<td style="text-align: center;">0.7135&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Confusion Matrix for Naive Bayesian</p>
+<table style="height: 124px;" width="443">
+<tbody>
+<tr>
+<td>&nbsp;</td>
+<td>Classified Positive(label=1.0)</td>
+<td>Classified Negative(label=0.0)</td>
+</tr>
+<tr>
+<td>Actual Positive</td>
+<td>TP = 149</td>
+<td>FN = 33</td>
+</tr>
+<tr>
+<td>Actual Negative</td>
+<td>FP = 35</td>
+<td>TN =&nbsp;142</td>
+</tr>
+</tbody>
+</table>
+<p>Confusion Matrix for Logistic Regression</p>
+<table style="height: 124px;" width="443">
+<tbody>
+<tr>
+<td>&nbsp;</td>
+<td>Classified Positive(label=1.0)</td>
+<td>Classified Negative(label=0.0)</td>
+</tr>
+<tr>
+<td>Actual Positive</td>
+<td>TP = 147</td>
+<td>FN= 35</td>
+</tr>
+<tr>
+<td>Actual Negative</td>
+<td>FP = 48</td>
+<td>TN=129</td>
+</tr>
+</tbody>
+</table>
+<p>Confusion Matrix for Decision Tree</p>
+<table style="height: 124px;" width="443">
+<tbody>
+<tr>
+<td>&nbsp;</td>
+<td>Classified Positive(label=1.0)</td>
+<td>Classified Negative(label=0.0)</td>
+</tr>
+<tr>
+<td>Actual Positive</td>
+<td>TP = 121</td>
+<td>FN = 45</td>
+</tr>
+<tr>
+<td>Actual Negative</td>
+<td>FP = 61</td>
+<td>TN = 132</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Naive Bayesian (Bernoulli) fits well and does good prediction for the given Training , test data.</p>
+<p>It has good accuracy and also good F1-score predicting tweets sentiment pretty well</p>
+<p>&nbsp;</p>
+<p>5. Image is plotted and can be found with name AccuracyPlot.png in html/ directory.</p>
+<img src="AccuracyPlot.png"></img>
+<p>Comapared to the other classifiers decision trees will overfit becuase the success of the classifer depends on height of the tree.</p>
+<p>6.</p>
+<p><strong>Precision:</strong></p>
+<p>For Negative sentiment: Fraction of correctly classsified Negative sentiment tweets(TrueNegative) out of all classified into Negative sentiment tweets</p>
+<p>For Positive sentiment:Fraction of correctly classsified&nbsp;Positive sentiment tweets(TruePositive) out of all classified into Positive&nbsp;sentiment tweets</p>
+<p><strong>Recall:</strong></p>
+<p>For Negative sentiment: Fraction of&nbsp;correctly classsified&nbsp;Negative sentiment tweets(TrueNegative) out of all Actual Negative sentiment tweets</p>
+<p>For Positive sentiment:&nbsp;Fraction of&nbsp;correctly classsified Positive sentiment tweets(TruePositive) out of all Actual Positive sentiment tweets</p>
+<p><strong>F1-Score:</strong></p>
+<p>For Negative sentiment: Weighted Average of Precision and Recall of Negative Sentiment Tweets.</p>
+<p>(Harmonic Mean)</p>
+<p>For Positive sentiment: Weighted Average of Precision and Recall of Positive&nbsp;Sentiment Tweets.</p>
+<p>(Harmonic Mean)</p>
+<p><strong>True Positive : </strong>Actual Positive sentiment tweets that are classified as positive sentiment by our model</p>
+<p><strong>False Positive :&nbsp; </strong>Actual Negative&nbsp;sentiment tweets that are classified as positive sentiment by our model</p>
+<p><strong>True Negative :&nbsp;</strong>Actual Negative sentiment tweets that are classified as&nbsp;negative sentiment by our model</p>
+<p><strong>False Negative :&nbsp;</strong>Actual Positive sentiment tweets that are classified as negative&nbsp;sentiment by our model</p>
+<p>&nbsp;</p>
+<p>7. ROC curve for Logistic Regression is plotted and is under the html/ directory with name ROC.png</p>
+<img src="ROC.png"></img>
+<p><strong>Area under the ROC curve</strong></p>
+<p>Naive Bayesian: 0.81</p>
+<p>Logistic Regression: 0.76</p>
+<p>ROC curve is drawn by with x-axis as False Positive Rate(FPR) and y-axis as True Positive Rate (TPR) with values varying from 0 to 1.</p>
+<p>FPR and TPR values at different thresholds are calculated for the classifier and ROC is constructed with it.&nbsp;</p>
+<p>The accuracy of the classifier depends on how well it seperates the the classes. The greater the area under the ROC curve, the better the classifier is in its prediction.</p>
+<p>The area greater than .5 means that classifier does a fair prediction.</p>
+<p>When comparing the Classifiers, the classifier with greater Area under ROC curve is chosen.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>8. Most informative features:
+We will calculate the positive and negative probailty of all words and most informative words will be those for which we can easily classify the tweet as positive or negative.
+if not is a most informative feature then all the tweets which has that word will most probably classified as negative tweet (i.e) Prob(PositiveSentiment)/Prob(NegativeSentiment) will be low.
+ For all tweets without that word the ratio will be higher.</p>
+<p>&nbsp;</p>
+<p>9. Naive Bayesian Classifier performs the best.</p>
+<p>It has good Training and Test accuracy. It doesnot overfit the data as it predicts the training and test accuracies doesnot differ much.</p>
+<p>It has higher Precision and Recall values for both classes than other classes. And gives F1-Score of .80 approximately for both classes</p>
+<p>It also has greater Area under ROC curve than other classifiers.</p>
+<p>10.</p>
+<p>Correctly Classified tweets:</p>
+<p><strong>True Positives</strong> :</p>
+<ul>
+<li>@stellargirl I loooooooovvvvvveee my Kindle2. Not that the DX is cool, but the 2 is fantastic in its own right.</li>
+<li>Stopped to have lunch at McDonalds. Chicken Nuggetssss! :) yummmmmy.</li>
+<li>Loves twitter</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>True Negatives:</strong></p>
+<ul>
+<li>Math review. Im going to fail the exam.</li>
+<li>@sportsguy33 Ummm, having some Time Warner problems?</li>
+</ul>
+<p>&nbsp;</p>
+<p>Incorrectly classified tweets:</p>
+<p><strong>False Negatives:</strong></p>
+<ul>
+<li>My dad was in NY for a day, we ate at MESA grill last night and met Bobby Flay. So much fun, except I completely lost my voice today.</li>
+<li>yankees won mets lost. its a good day.</li>
+</ul>
+<p><br /><strong>False Positives:</strong></p>
+<ul>
+<li>I just created my first LaTeX file from scratch. That didn\'t work out very well. (See @amandabittner , it\'s a great time waster</li>
+<li>Today is a good day to dislike AT&amp;amp;T. Vote out of office indeed, @danielpunkass</li>
+<li>Dick Cheney\'s dishonest speech about torture, terror, and Obama. -Fred Kaplan Slate. <a href="http://is.gd/DiHg%22'," target="_blank">http://is.gd/DiHg</a><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></li>
+</ul>
+</body>
+</html>
